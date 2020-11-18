@@ -1,0 +1,14 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "heartbond:item/ender_soul"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "active": 1
+            },
+            "model": "heartbond:item/ender_soul_active"
+        }
+    ]
+}
