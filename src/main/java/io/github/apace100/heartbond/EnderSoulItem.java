@@ -26,7 +26,7 @@ public class EnderSoulItem extends Item {
 
     @Override
     public UseAction getUseAction(ItemStack stack) {
-        return UseAction.EAT;
+        return UseAction.SPEAR;
     }
 
     @Override
@@ -59,32 +59,36 @@ public class EnderSoulItem extends Item {
 
     @SuppressWarnings("unchecked")
     public Optional<PlayerEntity> getBond(ItemStack stack, PlayerEntity user) {
-        Pair<UUID, UUID> bond = getBoundUUIDs(stack);
         Optional<UUID> userHeartUUID = Heartbond.getHeartUUID(user);
         if(userHeartUUID.isPresent()) {
-            UUID targetHeartUUID = null;
-            if(bond.getLeft().equals(userHeartUUID.get())) {
-                targetHeartUUID = bond.getRight();
-            } else if(bond.getRight().equals(userHeartUUID.get())) {
-                targetHeartUUID = bond.getLeft();
+            Optional<UUID> targetHeartUUID = getPairedUUID(stack, userHeartUUID.get());
+            if(targetHeartUUID.isPresent()) {
+                UUID finalTargetHeartUUID = targetHeartUUID.get();
+                return (Optional<PlayerEntity>) user.world.getPlayers().stream().filter(otherPlayer -> {
+                    Optional<UUID> otherPlayerHeartUUID = Heartbond.getHeartUUID(otherPlayer);
+                    return otherPlayerHeartUUID.map(uuid -> uuid.equals(finalTargetHeartUUID)).orElse(false);
+                }).findFirst();
             }
-            if(targetHeartUUID == null) {
-                return Optional.empty();
-            }
-            UUID finalTargetHeartUUID = targetHeartUUID;
-            return (Optional<PlayerEntity>) user.world.getPlayers().stream().filter(otherPlayer -> {
-                Optional<UUID> otherPlayerHeartUUID = Heartbond.getHeartUUID(otherPlayer);
-                return otherPlayerHeartUUID.map(uuid -> uuid.equals(finalTargetHeartUUID)).orElse(false);
-            }).findFirst();
         }
         return Optional.empty();
     }
 
-    public Pair<UUID, UUID> getBoundUUIDs(ItemStack stack) {
+    public static Pair<UUID, UUID> getBoundUUIDs(ItemStack stack) {
         CompoundTag heartbonds = stack.getSubTag("Heartbonds");
         if(heartbonds == null) {
             return new Pair<>(null, null);
         }
         return new Pair<>(heartbonds.getUuid("Bond0"), heartbonds.getUuid("Bond1"));
+    }
+
+    public static Optional<UUID> getPairedUUID(ItemStack stack, UUID userUuid) {
+        Pair<UUID, UUID> bond = getBoundUUIDs(stack);
+        UUID targetHeartUUID = null;
+        if(bond.getLeft().equals(userUuid)) {
+            targetHeartUUID = bond.getRight();
+        } else if(bond.getRight().equals(userUuid)) {
+            targetHeartUUID = bond.getLeft();
+        }
+        return Optional.ofNullable(targetHeartUUID);
     }
 }

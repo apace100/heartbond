@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.apace100.heartbond.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "HeartListSync",
+    "HeartListTest"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
