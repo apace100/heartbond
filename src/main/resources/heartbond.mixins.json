@@ -4,8 +4,7 @@
   "package": "io.github.apace100.heartbond.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "HeartListSync",
-    "HeartListTest"
+    "HeartListSync"
   ],
   "client": [],
   "injectors": {

@@ -39,7 +39,6 @@ public class HeartbondClient implements ClientModInitializer {
             return 0.0F;
         });
         ClientSidePacketRegistry.INSTANCE.register(Heartbond.PACKET_HEART_LIST_UPDATE, (context, buffer) -> {
-            Heartbond.LOGGER.info("Client received UPDATE packet.");
             HEART_LIST.clear();
             int count = buffer.readInt();
             List<UUID> uuids = new ArrayList<>(count);
@@ -51,12 +50,10 @@ public class HeartbondClient implements ClientModInitializer {
             });
         });
         ClientSidePacketRegistry.INSTANCE.register(Heartbond.PACKET_HEART_LIST_ADD, (context, buffer) -> {
-            Heartbond.LOGGER.info("Client received ADD packet.");
             UUID uuid = buffer.readUuid();
             context.getTaskQueue().execute(() -> HEART_LIST.add(uuid));
         });
         ClientSidePacketRegistry.INSTANCE.register(Heartbond.PACKET_HEART_LIST_REMOVE, (context, buffer) -> {
-            Heartbond.LOGGER.info("Client received REMOVE packet.");
             UUID uuid = buffer.readUuid();
             context.getTaskQueue().execute(() -> HEART_LIST.remove(uuid));
         });

@@ -26,14 +26,20 @@ public abstract class HeartListSync extends World {
         super(properties, registryRef, dimensionType, profiler, isClient, debugWorld, seed);
     }
 
-    @Inject(method = "removePlayer", at = @At("HEAD"))
+    @Inject(method = "removePlayer", at = @At("TAIL"))
     private void removeHeartFromList(ServerPlayerEntity player, CallbackInfo ci) {
         Heartbond.getHeartUUID(player).ifPresent(uuid -> HeartList.removeFromWorld(this, uuid));
     }
 
-    @Inject(method = "onPlayerChangeDimension", at = @At("HEAD"))
+    @Inject(method = "onPlayerChangeDimension", at = @At("TAIL"))
     private void addHeartToList(ServerPlayerEntity player, CallbackInfo ci) {
         Heartbond.getHeartUUID(player).ifPresent(uuid -> HeartList.addToWorld(this, uuid));
+        HeartList.updateForPlayer(player);
+    }
+
+    @Inject(method = "addPlayer", at = @At("TAIL"))
+    private void addHeartOnJoin(ServerPlayerEntity player, CallbackInfo ci) {
+        Heartbond.getHeartUUID(player).ifPresent(uuid -> HeartList.addToWorld(player.world, uuid));
         HeartList.updateForPlayer(player);
     }
 }

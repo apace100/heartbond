@@ -13,7 +13,7 @@ public class EnderHeartCurio implements ICurio {
 
     public EnderHeartCurio(ItemStack stack) {
         this.stack = stack;
-        if(stack.hasTag()) {
+        if(stack.hasTag() && stack.getTag().containsUuid("HeartUUID")) {
             uuid = stack.getTag().getUuid("HeartUUID");
         } else {
             uuid = null;
