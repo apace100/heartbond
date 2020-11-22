@@ -1,5 +1,7 @@
 package io.github.apace100.heartbond;
 
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -7,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
@@ -40,11 +43,23 @@ public class EnderSoulItem extends Item {
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity livingUser) {
-        if(livingUser instanceof PlayerEntity) {
+        if(livingUser instanceof PlayerEntity && !livingUser.world.isClient()) {
             PlayerEntity user = (PlayerEntity)livingUser;
             Optional<PlayerEntity> bond = getBond(stack, user);
             if(bond.isPresent()) {
-                user.teleport(bond.get().getX(), bond.get().getY(), bond.get().getZ());
+                PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+                buffer.writeDouble(user.getX());
+                buffer.writeDouble(user.getY());
+                buffer.writeDouble(user.getZ());
+                PlayerEntity target = bond.get();
+                double targetX = target.getX();
+                double targetY = target.getY();
+                double targetZ = target.getZ();
+                user.teleport(targetX, targetY, targetZ);
+                buffer.writeDouble(targetX);
+                buffer.writeDouble(targetY);
+                buffer.writeDouble(targetZ);
+                world.getPlayers().forEach(playerEntity -> ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntity, Heartbond.PACKET_TELEPORT_EVENT, buffer));
                 user.getItemCooldownManager().set(this, 100);
             } else {
                 user.getItemCooldownManager().set(this, 20);

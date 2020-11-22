@@ -36,6 +36,7 @@ public class Heartbond implements ModInitializer {
 	public static final Identifier PACKET_HEART_LIST_UPDATE = new Identifier("heartbond", "heart_list_update");
 	public static final Identifier PACKET_HEART_LIST_ADD = new Identifier("heartbond", "heart_list_add");
 	public static final Identifier PACKET_HEART_LIST_REMOVE = new Identifier("heartbond", "heart_list_remove");
+	public static final Identifier PACKET_TELEPORT_EVENT = new Identifier("heartbond", "teleport");
 
 	public static Optional<UUID> getHeartUUID(PlayerEntity player) {
 		Optional<ImmutableTriple<String, Integer, ItemStack>> curio = CuriosApi.getCuriosHelper().findEquippedCurio(Heartbond.HEART, player);
