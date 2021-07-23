@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.SpecialRecipeSerializer;
@@ -25,8 +25,8 @@ public class SoulRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public DefaultedList<ItemStack> getRemainingStacks(CraftingInventory inventory) {
-        DefaultedList<ItemStack> stacks = super.getRemainingStacks(inventory);
+    public DefaultedList<ItemStack> getRemainder(CraftingInventory inventory) {
+        DefaultedList<ItemStack> stacks = super.getRemainder(inventory);
         for(int i = 0; i < inventory.size(); ++i) {
             ItemStack itemStack = inventory.getStack(i);
             if (!itemStack.isEmpty()) {
@@ -45,12 +45,12 @@ public class SoulRecipe extends SpecialCraftingRecipe {
             ItemStack itemStack = craftingInventory.getStack(i);
             if (!itemStack.isEmpty()) {
                 if(itemStack.getItem() == Heartbond.HEART) {
-                    if(itemStack.hasTag() && itemStack.getTag().containsUuid("HeartUUID")) {
+                    if(itemStack.hasNbt() && itemStack.getNbt().containsUuid("HeartUUID")) {
                         hearts++;
                     } else {
                         return false;
                     }
-                } else if(itemStack.getItem().isIn(Heartbond.SOUL_CRAFTING_ITEMS)) {
+                } else if(Heartbond.SOUL_CRAFTING_ITEMS.contains(itemStack.getItem())) {
                     souls++;
                 } else {
                     return false;
@@ -69,7 +69,7 @@ public class SoulRecipe extends SpecialCraftingRecipe {
             if (!itemStack.isEmpty()) {
                 if(itemStack.getItem() == Heartbond.HEART) {
                     hearts.add(itemStack);
-                } else if(itemStack.getItem().isIn(Heartbond.SOUL_CRAFTING_ITEMS)) {
+                } else if(Heartbond.SOUL_CRAFTING_ITEMS.contains(itemStack.getItem())) {
                     souls++;
                 } else {
                     return ItemStack.EMPTY;
@@ -79,9 +79,9 @@ public class SoulRecipe extends SpecialCraftingRecipe {
 
         if(souls > 0 && hearts.size() == 2) {
             ItemStack result = new ItemStack(Heartbond.SOUL);
-            CompoundTag tag = result.getOrCreateSubTag("Heartbonds");
-            tag.putUuid("Bond0", hearts.get(0).getTag().getUuid("HeartUUID"));
-            tag.putUuid("Bond1", hearts.get(1).getTag().getUuid("HeartUUID"));
+            NbtCompound tag = result.getOrCreateSubNbt("Heartbonds");
+            tag.putUuid("Bond0", hearts.get(0).getNbt().getUuid("HeartUUID"));
+            tag.putUuid("Bond1", hearts.get(1).getNbt().getUuid("HeartUUID"));
             return result;
         }
         return ItemStack.EMPTY;

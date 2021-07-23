@@ -2,21 +2,18 @@ package io.github.apace100.heartbond;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-import top.theillusivec4.curios.api.CuriosApi;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -89,7 +86,7 @@ public class EnderSoulItem extends Item {
     }
 
     public static Pair<UUID, UUID> getBoundUUIDs(ItemStack stack) {
-        CompoundTag heartbonds = stack.getSubTag("Heartbonds");
+        NbtCompound heartbonds = stack.getSubNbt("Heartbonds");
         if(heartbonds == null) {
             return new Pair<>(null, null);
         }

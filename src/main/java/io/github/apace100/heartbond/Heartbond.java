@@ -1,26 +1,22 @@
 package io.github.apace100.heartbond;
 
-import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
-import nerdhub.cardinal.components.api.event.ItemComponentCallbackV2;
+import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketComponent;
+import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.tag.FabricTag;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
-import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.CuriosComponent;
-import top.theillusivec4.curios.api.SlotTypeInfo;
-import top.theillusivec4.curios.api.SlotTypePreset;
-import top.theillusivec4.curios.api.type.component.ICurio;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -39,11 +35,12 @@ public class Heartbond implements ModInitializer {
 	public static final Identifier PACKET_TELEPORT_EVENT = new Identifier("heartbond", "teleport");
 
 	public static Optional<UUID> getHeartUUID(PlayerEntity player) {
-		Optional<ImmutableTriple<String, Integer, ItemStack>> curio = CuriosApi.getCuriosHelper().findEquippedCurio(Heartbond.HEART, player);
-		if(curio.isPresent()) {
-			ItemStack heart = curio.get().right;
-			if (heart.hasTag() && heart.getTag().containsUuid("HeartUUID")) {
-				return Optional.of(heart.getTag().getUuid("HeartUUID"));
+		Optional<TrinketComponent> component = TrinketsApi.getTrinketComponent(player);
+		if(component.isPresent()) {
+			List<Pair<SlotReference, ItemStack>> list = component.get().getEquipped(Heartbond.HEART);
+			if(list.size() > 0) {
+				ItemStack heart = list.get(0).getRight();
+				return EnderHeartItem.getHeartUUID(heart);
 			}
 		}
 		return Optional.empty();
@@ -53,17 +50,8 @@ public class Heartbond implements ModInitializer {
 	public void onInitialize() {
 		LOGGER.info("Heartbond was initialized. Enjoy bonding!");
 		SoulRecipe.SERIALIZER.toString();
-		CuriosApi.enqueueSlotType(SlotTypeInfo.BuildScheme.REGISTER,
-			new SlotTypeInfo.Builder("ender_heart")
-			.icon(new Identifier("heartbond", "item/empty_ender_heart_slot"))
-			.size(1)
-			.build()
-		);
+		TrinketsApi.registerTrinket(Heartbond.HEART, new EnderHeartTrinket());
 		Registry.register(Registry.ITEM, new Identifier("heartbond:ender_heart"), HEART);
 		Registry.register(Registry.ITEM, new Identifier("heartbond:ender_soul"), SOUL);
-		ItemComponentCallbackV2.event(HEART).register(
-			((item, itemStack, componentContainer) -> componentContainer
-				.put(CuriosComponent.ITEM, new EnderHeartCurio(itemStack))));
-
 	}
 }

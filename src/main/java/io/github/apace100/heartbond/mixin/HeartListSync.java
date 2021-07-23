@@ -2,6 +2,7 @@ package io.github.apace100.heartbond.mixin;
 
 import io.github.apace100.heartbond.HeartList;
 import io.github.apace100.heartbond.Heartbond;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -27,7 +28,7 @@ public abstract class HeartListSync extends World {
     }
 
     @Inject(method = "removePlayer", at = @At("TAIL"))
-    private void removeHeartFromList(ServerPlayerEntity player, CallbackInfo ci) {
+    private void removeHeartFromList(ServerPlayerEntity player, Entity.RemovalReason reason, CallbackInfo ci) {
         Heartbond.getHeartUUID(player).ifPresent(uuid -> HeartList.removeFromWorld(this, uuid));
     }
 
