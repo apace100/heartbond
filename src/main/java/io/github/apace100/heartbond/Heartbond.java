@@ -4,11 +4,11 @@ import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Rarity;
@@ -27,7 +27,7 @@ public class Heartbond implements ModInitializer {
 	public static final EnderHeartItem HEART = new EnderHeartItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC));
 	public static final EnderSoulItem SOUL = new EnderSoulItem(new Item.Settings().maxCount(1).rarity(Rarity.RARE));
 
-	public static final Tag<Item> SOUL_CRAFTING_ITEMS = TagRegistry.item(new Identifier("heartbond", "soul_crafting_items"));
+	public static final TagKey<Item> SOUL_CRAFTING_ITEMS = TagKey.of(Registry.ITEM_KEY, new Identifier("heartbond", "soul_crafting_items"));
 
 	public static final Identifier PACKET_HEART_LIST_UPDATE = new Identifier("heartbond", "heart_list_update");
 	public static final Identifier PACKET_HEART_LIST_ADD = new Identifier("heartbond", "heart_list_add");

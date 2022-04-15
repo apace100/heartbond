@@ -19,6 +19,9 @@ repositories {
 		name = "Ladysnake Libs"
 		url = "https://ladysnake.jfrog.io/artifactory/mods"
 	}
+	maven {
+		url "https://maven.terraformersmc.com/"
+	}
 }
 
 dependencies {

@@ -50,7 +50,7 @@ public class SoulRecipe extends SpecialCraftingRecipe {
                     } else {
                         return false;
                     }
-                } else if(Heartbond.SOUL_CRAFTING_ITEMS.contains(itemStack.getItem())) {
+                } else if(itemStack.isIn(Heartbond.SOUL_CRAFTING_ITEMS)) {
                     souls++;
                 } else {
                     return false;
@@ -69,7 +69,7 @@ public class SoulRecipe extends SpecialCraftingRecipe {
             if (!itemStack.isEmpty()) {
                 if(itemStack.getItem() == Heartbond.HEART) {
                     hearts.add(itemStack);
-                } else if(Heartbond.SOUL_CRAFTING_ITEMS.contains(itemStack.getItem())) {
+                } else if(itemStack.isIn(Heartbond.SOUL_CRAFTING_ITEMS)) {
                     souls++;
                 } else {
                     return ItemStack.EMPTY;
