@@ -1,7 +1,7 @@
 package io.github.apace100.heartbond;
 
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
@@ -56,7 +57,7 @@ public class EnderSoulItem extends Item {
                 buffer.writeDouble(targetX);
                 buffer.writeDouble(targetY);
                 buffer.writeDouble(targetZ);
-                world.getPlayers().forEach(playerEntity -> ServerSidePacketRegistry.INSTANCE.sendToPlayer(playerEntity, Heartbond.PACKET_TELEPORT_EVENT, buffer));
+                world.getPlayers().forEach(playerEntity -> ServerPlayNetworking.send((ServerPlayerEntity)playerEntity, Heartbond.PACKET_TELEPORT_EVENT, buffer));
                 user.getItemCooldownManager().set(this, 100);
             } else {
                 user.getItemCooldownManager().set(this, 20);
