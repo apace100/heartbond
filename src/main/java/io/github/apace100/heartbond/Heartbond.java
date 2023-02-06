@@ -7,11 +7,13 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +28,7 @@ public class Heartbond implements ModInitializer {
 	public static final EnderHeartItem HEART = new EnderHeartItem(new Item.Settings().maxCount(1).rarity(Rarity.EPIC));
 	public static final EnderSoulItem SOUL = new EnderSoulItem(new Item.Settings().maxCount(1).rarity(Rarity.RARE));
 
-	public static final TagKey<Item> SOUL_CRAFTING_ITEMS = TagKey.of(Registry.ITEM_KEY, new Identifier("heartbond", "soul_crafting_items"));
+	public static final TagKey<Item> SOUL_CRAFTING_ITEMS = TagKey.of(RegistryKeys.ITEM, new Identifier("heartbond", "soul_crafting_items"));
 
 	public static final Identifier PACKET_HEART_LIST_UPDATE = new Identifier("heartbond", "heart_list_update");
 	public static final Identifier PACKET_HEART_LIST_ADD = new Identifier("heartbond", "heart_list_add");
@@ -50,7 +52,7 @@ public class Heartbond implements ModInitializer {
 		LOGGER.info("Heartbond was initialized. Enjoy bonding!");
 		SoulRecipe.SERIALIZER.toString();
 		TrinketsApi.registerTrinket(Heartbond.HEART, new EnderHeartTrinket());
-		Registry.register(Registry.ITEM, new Identifier("heartbond:ender_heart"), HEART);
-		Registry.register(Registry.ITEM, new Identifier("heartbond:ender_soul"), SOUL);
+		Registry.register(Registries.ITEM, new Identifier("heartbond:ender_heart"), HEART);
+		Registry.register(Registries.ITEM, new Identifier("heartbond:ender_soul"), SOUL);
 	}
 }

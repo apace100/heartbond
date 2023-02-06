@@ -9,19 +9,21 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.SpecialRecipeSerializer;
+import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.List;
 
 @SuppressWarnings("unchecked")
 public class SoulRecipe extends SpecialCraftingRecipe {
-    public static final SpecialRecipeSerializer<SoulRecipe> SERIALIZER = (SpecialRecipeSerializer<SoulRecipe>)Registry.register(Registry.RECIPE_SERIALIZER, new Identifier("heartbond", "crafting_special_createsoul"), new SpecialRecipeSerializer<>(SoulRecipe::new));
+    public static final SpecialRecipeSerializer<SoulRecipe> SERIALIZER = Registry.register(Registries.RECIPE_SERIALIZER, new Identifier("heartbond", "crafting_special_createsoul"), new SpecialRecipeSerializer<>(SoulRecipe::new));
 
-    public SoulRecipe(Identifier identifier) {
-        super(identifier);
+    public SoulRecipe(Identifier identifier, CraftingRecipeCategory category) {
+        super(identifier, category);
     }
 
     @Override

@@ -4,7 +4,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.mixin.object.builder.client.ModelPredicateProviderRegistrySpecificAccessor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,11 +24,11 @@ public class HeartbondClient implements ClientModInitializer {
     @Override
     @Environment(EnvType.CLIENT)
     public void onInitializeClient() {
-        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
+        /*ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)
             .register(((spriteAtlasTexture, registry) -> {
                 registry.register(new Identifier("heartbond:item/empty_ender_heart_slot"));
             }));
-        ModelPredicateProviderRegistrySpecificAccessor.callRegister(Heartbond.SOUL, new Identifier("active"), (stack, world, entity, seed) -> {
+        */ModelPredicateProviderRegistrySpecificAccessor.callRegister(Heartbond.SOUL, new Identifier("active"), (stack, world, entity, seed) -> {
             if(entity instanceof PlayerEntity) {
                 PlayerEntity user = (PlayerEntity)entity;
                 Optional<UUID> userHeart = Heartbond.getHeartUUID(user);
