@@ -3,6 +3,7 @@ package io.github.apace100.heartbond.mixin;
 import io.github.apace100.heartbond.HeartList;
 import io.github.apace100.heartbond.Heartbond;
 import net.minecraft.entity.Entity;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.PlayerManager;
@@ -24,8 +25,8 @@ import java.util.function.Supplier;
 @Mixin(ServerWorld.class)
 public abstract class HeartListSync extends World {
 
-    protected HeartListSync(MutableWorldProperties properties, RegistryKey<World> registryRef, RegistryEntry<DimensionType> dimension, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
-        super(properties, registryRef, dimension, profiler, isClient, debugWorld, seed, maxChainedNeighborUpdates);
+    protected HeartListSync(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long biomeAccess, int maxChainedNeighborUpdates) {
+        super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
     }
 
     @Inject(method = "removePlayer", at = @At("TAIL"))
@@ -41,7 +42,7 @@ public abstract class HeartListSync extends World {
 
     @Inject(method = "addPlayer", at = @At("TAIL"))
     private void addHeartOnJoin(ServerPlayerEntity player, CallbackInfo ci) {
-        Heartbond.getHeartUUID(player).ifPresent(uuid -> HeartList.addToWorld(player.world, uuid));
+        Heartbond.getHeartUUID(player).ifPresent(uuid -> HeartList.addToWorld(player.getWorld(), uuid));
         HeartList.updateForPlayer(player);
     }
 }

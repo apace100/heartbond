@@ -4,12 +4,14 @@ import com.google.common.collect.Lists;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.CraftingInventory;
+import net.minecraft.inventory.RecipeInputInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SpecialCraftingRecipe;
 import net.minecraft.recipe.SpecialRecipeSerializer;
 import net.minecraft.recipe.book.CraftingRecipeCategory;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
@@ -27,7 +29,7 @@ public class SoulRecipe extends SpecialCraftingRecipe {
     }
 
     @Override
-    public DefaultedList<ItemStack> getRemainder(CraftingInventory inventory) {
+    public DefaultedList<ItemStack> getRemainder(RecipeInputInventory inventory) {
         DefaultedList<ItemStack> stacks = super.getRemainder(inventory);
         for(int i = 0; i < inventory.size(); ++i) {
             ItemStack itemStack = inventory.getStack(i);
@@ -40,11 +42,12 @@ public class SoulRecipe extends SpecialCraftingRecipe {
         return stacks;
     }
 
-    public boolean matches(CraftingInventory craftingInventory, World world) {
+    @Override
+    public boolean matches(RecipeInputInventory inventory, World world) {
         int hearts = 0;
         int souls = 0;
-        for(int i = 0; i < craftingInventory.size() && hearts < 3 && souls < 2; ++i) {
-            ItemStack itemStack = craftingInventory.getStack(i);
+        for(int i = 0; i < inventory.size() && hearts < 3 && souls < 2; ++i) {
+            ItemStack itemStack = inventory.getStack(i);
             if (!itemStack.isEmpty()) {
                 if(itemStack.getItem() == Heartbond.HEART) {
                     if(itemStack.hasNbt() && itemStack.getNbt().containsUuid("HeartUUID")) {
@@ -63,11 +66,12 @@ public class SoulRecipe extends SpecialCraftingRecipe {
         return souls == 1 && hearts == 2;
     }
 
-    public ItemStack craft(CraftingInventory craftingInventory) {
+    @Override
+    public ItemStack craft(RecipeInputInventory inventory, DynamicRegistryManager registryManager) {
         List<ItemStack> hearts = Lists.newArrayList();
         int souls = 0;
-        for(int i = 0; i < craftingInventory.size(); ++i) {
-            ItemStack itemStack = craftingInventory.getStack(i);
+        for(int i = 0; i < inventory.size(); ++i) {
+            ItemStack itemStack = inventory.getStack(i);
             if (!itemStack.isEmpty()) {
                 if(itemStack.getItem() == Heartbond.HEART) {
                     hearts.add(itemStack);

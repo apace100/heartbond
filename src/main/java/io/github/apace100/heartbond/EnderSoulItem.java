@@ -41,8 +41,7 @@ public class EnderSoulItem extends Item {
 
     @Override
     public ItemStack finishUsing(ItemStack stack, World world, LivingEntity livingUser) {
-        if(livingUser instanceof PlayerEntity && !livingUser.world.isClient()) {
-            PlayerEntity user = (PlayerEntity)livingUser;
+        if(livingUser instanceof PlayerEntity user && !livingUser.getWorld().isClient()) {
             Optional<PlayerEntity> bond = getBond(stack, user);
             if(bond.isPresent()) {
                 PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
@@ -77,7 +76,7 @@ public class EnderSoulItem extends Item {
             Optional<UUID> targetHeartUUID = getPairedUUID(stack, userHeartUUID.get());
             if(targetHeartUUID.isPresent()) {
                 UUID finalTargetHeartUUID = targetHeartUUID.get();
-                return (Optional<PlayerEntity>) user.world.getPlayers().stream().filter(otherPlayer -> {
+                return (Optional<PlayerEntity>) user.getWorld().getPlayers().stream().filter(otherPlayer -> {
                     Optional<UUID> otherPlayerHeartUUID = Heartbond.getHeartUUID(otherPlayer);
                     return otherPlayerHeartUUID.map(uuid -> uuid.equals(finalTargetHeartUUID)).orElse(false);
                 }).findFirst();

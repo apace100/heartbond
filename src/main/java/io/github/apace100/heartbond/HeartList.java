@@ -52,11 +52,10 @@ public final class HeartList {
     }
 
     public static void updateForPlayer(PlayerEntity player) {
-            if (player instanceof ServerPlayerEntity) {
-                ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
+            if (player instanceof ServerPlayerEntity serverPlayer) {
                 Set<UUID> uuids;
-                if (list.containsKey(player.world)) {
-                    uuids = list.get(player.world);
+                if (list.containsKey(player.getWorld())) {
+                    uuids = list.get(player.getWorld());
                 } else {
                     uuids = new HashSet<>();
                 }
